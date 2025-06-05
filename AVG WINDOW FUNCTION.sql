@@ -1,0 +1,40 @@
+----WINDOW FUNCTION----------
+-----AVG() ---------
+
+--FIND THE AVERAGE SALES ACROSS ALL ORDERS AND THE AVERAGE SALES FOR EACH PRODUCT .
+---ADDITIONALLY , PROVIDE DETAILS SUCH AS ORDERID AND ORDER DATE
+
+SELECT 
+OrderID,
+OrderDate,
+Sales,
+ProductID,
+AVG(Sales) OVER (PARTITION BY ProductID)AvgSalesByProducts ,
+AVG(Sales) OVER ()AvgSales
+FROM Sales.Orders
+
+
+---FIND THE AVERAGE SCORES OF CUSTOMERS ,
+---PROVIDE DETAILS SUCH AS CUSTOMER ID AND LASTNAME
+USE SalesDB
+SELECT 
+CustomerID ,
+lastName ,
+Score,
+COALESCE (Score , 0) CustomerScore,
+AVG(Score) OVER()AvgScore,
+AVG(COALESCE (Score , 2)) OVER() AvgScoreWithouNull
+FROM Sales.Customers
+
+
+---FIND ALL ORDERS WHERE SALES ARE HIGHER THAN THE AVERAGE SALES ACROSS ALL ORDERS
+SELECT
+*
+FROM(
+ SELECT
+ProductID,
+OrderID,
+Sales,
+AVG(Sales) OVER() AvgSales 
+FROM Sales.Orders)t
+WHERE Sales > AvgSales
